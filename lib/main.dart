@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'components/Themes.dart';
-
-const String imageUrl =
-    'https://images.unsplash.com/photo-1584441405886-bc91be61e56a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60';
+import 'screens/ListaContatos.dart';
+import 'screens/ListaTransferencias.dart';
+import 'components/drawer/DrawerApp.dart';
+import 'screens/Formulario_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,15 +25,12 @@ class ByteBank extends StatefulWidget {
 }
 
 class _ByteBankState extends State<ByteBank> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Image(
-      image: NetworkImage(imageUrl),
-      alignment: Alignment.center,
-      //height: 500.0,
-    ),
-    Text('Transferencias'),
+  static List<Widget> _widgetOptions = <Widget>[
+    ListaContatos(),
+    ListaTransferencias(),
   ];
 
   void _onItemTapped(int index) {
@@ -44,13 +42,23 @@ class _ByteBankState extends State<ByteBank> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Dashboard'),
       ),
+      drawer: DrawerApp(),
       body: _widgetOptions.elementAt(_selectedIndex),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  isScrollControlled: true,
+                  builder: (context) => Formulario());
+        },
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -59,23 +67,13 @@ class _ByteBankState extends State<ByteBank> {
         onTap: _onItemTapped,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.people), title: Text('Contatos')),
+            icon: Icon(Icons.people),
+            title: Text('Contatos'),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on),
             title: Text('Transferências'),
           ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget cardContatos() {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Icon(Icons.people),
-          Text('Contatos'),
         ],
       ),
     );

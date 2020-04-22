@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+/// Classe de themes
 class ThemesApp{
 
   ThemeData mainTheme(){
